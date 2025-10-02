@@ -1,0 +1,12 @@
+---
+title: "week2"
+output: html_document
+date: "2025-10-02"
+---
+## Q2
+```{r}
+library(dplyr)
+library(nycflights13)
+library(gapminder)
+```
+
