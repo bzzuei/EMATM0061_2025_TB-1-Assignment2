@@ -18,4 +18,98 @@ large_delays_JFK <- flights %>%
 
 head(large_delays_JFK, 5)
 ```
+## Q2 How many variables does the large_delays_JFK data frame have? How many observations? 
+```{r}
+dim(large_delays_JFK)
+```
+## Q3 Sort large_delays_JFK by arrival delay in descending order (i.e., largest to smallest). Print the top 5 rows. 
+```{r}
+head(large_delays_JFK %>% arrange(desc(arr_delay)),5)
+```
+
+
+## Q4  Use left_join() to merge airline_lookup into large_delays_JFK, replacing carrier codes with full airline names. Store this as a new variable X.
+```{r}
+airline_lookup <- data.frame( 
+  carrier = c("AA", "DL", "UA", "B6", "WN"), 
+  airline_name = c("American Airlines", "Delta", "United Airlines", "JetBlue", "Southwest Airlines")) 
+```
+
+```{r}
+X <- left_join(large_delays_JFK, airline_lookup, by = join_by(carrier))
+X <- X %>%
+  select(-carrier)%>%
+  rename(carrier = airline_name)
+dim(X)
+```
+
+
+## Q5 Rename the variable airline_name in data frame X to simply airline, then use a combination of select() and print() to display the first 7 rows of only the airline_name, dep_delay, and arr_delay columns. 
+```{r}
+q5 <- X %>%
+  rename(airline=carrier)%>%
+  select(airline, dep_delay,arr_delay)
+
+head(q5,7)
+```
+## Q6 Does it matter whether you use left_join() vs. inner_join() in this case? Can you think of a situation in which it would make a difference? 
+```{r}
+q6 <- inner_join(large_delays_JFK, airline_lookup,by = join_by(carrier))
+
+dim(q6)
+```
+
+## Q7
+```{r}
+q7 <- large_delays_JFK %>%
+  mutate(delay_ratio = arr_delay / dep_delay) %>%
+  select(carrier, delay_ratio) %>%
+  arrange(desc(delay_ratio))
+
+head(q7, 10)
+```
+
+
+## Q8
+```{r}
+large_delays_JFK %>%
+  mutate(delay_ratio = arr_delay / dep_delay)
+
+summary_table <- large_delays_JFK %>%
+  group_by(carrier) %>%
+  summarize(n_flights=n(), avg_dep_delay = mean(dep_delay, na.rm = TRUE), median_arr_dealy = median(arr_delay, na.rm = TRUE), max_delay_ratio = max(delay_ratio, na.rm = TRUE))
+
+summary_table
+```
+
+## Q9
+```{r}
+missing_counts <- large_delays_JFK %>%
+  group_by(carrier) %>% 
+  summarise(
+    missing_dep_delay = sum(is.na(dep_delay)),
+    missing_arr_delay = sum(is.na(arr_delay)),
+    missing_delay_ratio = sum(is.na(delay_ratio))
+  )
+
+missing_counts
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
