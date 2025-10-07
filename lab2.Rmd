@@ -1,12 +1,21 @@
 ---
-title: "week2"
+title: "Assignment 02"
 output: html_document
 date: "2025-10-02"
 ---
-## Q2
+## Q1
 ```{r}
 library(dplyr)
 library(nycflights13)
 library(gapminder)
+head(flights)
+```
+
+```{r}
+large_delays_JFK <- flights %>%
+  filter(origin == "JFK", dep_delay>=60) %>%
+  select(year, month, day, dep_delay, arr_delay, carrier)
+
+head(large_delays_JFK, 5)
 ```
 
